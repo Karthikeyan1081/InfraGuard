@@ -1,0 +1,4 @@
+asset_id,hostname,ip_address,environment,owner,status
+APP001,api-prod-01,10.1.1.10,Production,App Team,Active
+APP002,auth-prod-01,10.1.1.20,Production,Security Team,Active
+APP003,test-app-01,10.1.2.10,Testing,QA Team,Active

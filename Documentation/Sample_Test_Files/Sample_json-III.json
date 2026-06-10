@@ -1,0 +1,26 @@
+[
+  {
+    "asset_id": "APP001",
+    "hostname": "api-prod-01",
+    "ip_address": "10.1.1.11",
+    "environment": "Production",
+    "owner": "App Team",
+    "status": "Active"
+  },
+  {
+    "asset_id": "APP002",
+    "hostname": "auth-production-01",
+    "ip_address": "10.1.1.20",
+    "environment": "Production",
+    "owner": "Security Team",
+    "status": "Active"
+  },
+  {
+    "asset_id": "APP004",
+    "hostname": "analytics-prod-01",
+    "ip_address": "10.1.1.40",
+    "environment": "Production",
+    "owner": "Data Team",
+    "status": "Active"
+  }
+]

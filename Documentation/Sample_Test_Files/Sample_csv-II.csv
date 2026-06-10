@@ -1,0 +1,4 @@
+asset_id,hostname,ip_address,environment,owner,status
+SRV001,web-prod-01,10.0.1.10,Production,Infra Team,Active
+SRV002,db-prod-01,10.0.1.20,Production,DB Team,Active
+SRV003,cache-prod-01,10.0.1.30,Production,Infra Team,Active
