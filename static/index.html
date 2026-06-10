@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InfraGuard - Infrastructure Inventory Reconciliation Dashboard</title>
+    <meta name="description" content="Audits and reconciles expected CMDB inventory spreadsheets against actual server discovery reports.">
+    <!-- Google Fonts integration -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="/static/styles.css?v=1.0.1">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Dashboard Header -->
+        <header id="main-header">
+            <div class="brand">
+                <div class="logo-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-svg">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </div>
+                <div>
+                    <h1>InfraGuard</h1>
+                    <p>Asset Discovery & Drift Reconciliation</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main id="main-workspace">
+            <!-- Left Panel: Actions & Audit Runs -->
+            <section id="sidebar-panel">
+                <!-- Ingestion Section -->
+                <div class="card panel-card">
+                    <h2>Execute New Audit</h2>
+                    <form id="audit-ingestion-form">
+                        <div class="form-group">
+                            <label for="audit-name-input">Audit Run Name</label>
+                            <input type="text" id="audit-name-input" placeholder="e.g., Q2 Infrastructure Audit" required>
+                        </div>
+                        
+                        <div class="form-group file-group">
+                            <label for="cmdb-file-input">CMDB Expected Inventory (CSV)</label>
+                            <div class="file-upload-wrapper">
+                                <input type="file" id="cmdb-file-input" accept=".csv" required>
+                                <span class="upload-btn">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                    </svg>
+                                    Choose CSV
+                                </span>
+                                <span id="cmdb-filename-display" class="filename-display">No file selected</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group file-group">
+                            <label for="actual-file-input">Actual Discovery Report (JSON)</label>
+                            <div class="file-upload-wrapper">
+                                <input type="file" id="actual-file-input" accept=".json" required>
+                                <span class="upload-btn">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                    </svg>
+                                    Choose JSON
+                                </span>
+                                <span id="actual-filename-display" class="filename-display">No file selected</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="start-reconciliation-btn" class="btn btn-primary">
+                            <span class="btn-spinner hidden" id="reconcile-spinner"></span>
+                            Reconcile Datasets
+                        </button>
+                    </form>
+                    <div id="upload-status-message" class="status-msg hidden"></div>
+                </div>
+
+                <!-- Past Runs List -->
+                <div class="card panel-card flex-grow">
+                    <h2>Audit History</h2>
+                    <div class="history-list-wrapper">
+                        <ul id="analyses-history-list">
+                            <!-- Populated dynamically -->
+                            <li class="loading-placeholder">Loading audit history...</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Results & Analytics -->
+            <section id="content-panel">
+                <!-- Welcome/Placeholder view -->
+                <div id="empty-state-view" class="card empty-card">
+                    <div class="empty-icon-box">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-state-svg">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                            <path d="M14 3v5h5M16 13H8M16 17H8M10 9H8"/>
+                        </svg>
+                    </div>
+                    <h2>No Audit Run Selected</h2>
+                    <p>Select a run from the History list on the left, or upload new files to execute a reconciliation audit and view statistics, risk details, and recommendations.</p>
+                </div>
+
+                <!-- Active Report Dashboard -->
+                <div id="dashboard-results-view" class="hidden">
+                    <!-- Dashboard Metadata & Actions -->
+                    <div class="dashboard-header-bar">
+                        <div>
+                            <h2 id="active-audit-title">Q2 Infrastructure Audit</h2>
+                            <p id="active-audit-meta" class="meta-info">Executed on: June 9, 2026</p>
+                        </div>
+                        <button id="download-pdf-btn" class="btn btn-secondary">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Download PDF Report
+                        </button>
+                    </div>
+
+                    <!-- AI Executive Summary Card -->
+                    <div class="card ai-summary-card">
+                        <div class="ai-header">
+                            <svg class="ai-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="url(#ai-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <defs>
+                                    <linearGradient id="ai-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#8b5cf6" />
+                                        <stop offset="100%" stop-color="#3b82f6" />
+                                    </linearGradient>
+                                </defs>
+                                <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+                                <path d="M12 12 2.1 14.8a10 10 0 0 0 19.8 0L12 12z"></path>
+                            </svg>
+                            <h3>AI Executive Summary</h3>
+                        </div>
+                        <div id="ai-summary-content">
+                            <div class="shimmer-placeholder"></div>
+                            <div class="shimmer-placeholder w-80"></div>
+                            <div class="shimmer-placeholder w-90"></div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Summary Cards -->
+                    <div class="stats-grid">
+                        <div class="card stat-card" id="card-total">
+                            <h3>Total Discrepancies</h3>
+                            <p class="stat-value" id="stat-total-val">0</p>
+                        </div>
+                        <div class="card stat-card border-high" id="card-high">
+                            <h3>High Severity</h3>
+                            <p class="stat-value color-high" id="stat-high-val">0</p>
+                        </div>
+                        <div class="card stat-card border-medium" id="card-medium">
+                            <h3>Medium Severity</h3>
+                            <p class="stat-value color-medium" id="stat-medium-val">0</p>
+                        </div>
+                        <div class="card stat-card border-low" id="card-low">
+                            <h3>Low Severity</h3>
+                            <p class="stat-value color-low" id="stat-low-val">0</p>
+                        </div>
+                    </div>
+
+                    <!-- Charts Grid -->
+                    <div class="charts-row">
+                        <div class="card chart-card">
+                            <h3>Discrepancies by Type</h3>
+                            <div class="canvas-container">
+                                <canvas id="type-chart-canvas" width="220" height="220"></canvas>
+                            </div>
+                            <div id="chart-legend-container" class="chart-legend"></div>
+                        </div>
+                        <div class="card chart-card">
+                            <h3>Severity Distribution</h3>
+                            <div class="canvas-container">
+                                <canvas id="severity-chart-canvas" width="220" height="220"></canvas>
+                            </div>
+                            <div id="sev-legend-container" class="chart-legend"></div>
+                        </div>
+                    </div>
+
+                    <!-- Systematic Pattern Warnings (Investigation) -->
+                    <div class="card patterns-card" id="patterns-warning-box">
+                        <h3>Systemic Investigation Warnings</h3>
+                        <div id="patterns-list-container">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Discrepancy Filter Toolbar -->
+                    <div class="card filter-card">
+                        <div class="filter-toolbar">
+                            <div class="filter-item">
+                                <label for="severity-filter">Severity</label>
+                                <select id="severity-filter">
+                                    <option value="all">All Severities</option>
+                                    <option value="High">High</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Low">Low</option>
+                                </select>
+                            </div>
+                            <div class="filter-item">
+                                <label for="type-filter">Discrepancy Type</label>
+                                <select id="type-filter">
+                                    <option value="all">All Types</option>
+                                    <option value="missing">Missing Asset</option>
+                                    <option value="untracked">Untracked Asset</option>
+                                    <option value="naming_mismatch">Naming Mismatch</option>
+                                    <option value="attribute_mismatch">Attribute Mismatch</option>
+                                    <option value="duplicate">Duplicate Asset</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Table -->
+                    <div class="card table-card">
+                        <div class="table-header-row">
+                            <h3>Detailed Discrepancies Log</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="discrepancy-log-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 15%">Type</th>
+                                        <th style="width: 12%">Severity</th>
+                                        <th style="width: 25%">Asset Identifiers</th>
+                                        <th style="width: 48%">Observation & Remediation Guidelines</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="discrepancy-log-tbody">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Floating AI Chatbot -->
+    <div id="ai-chatbot-widget">
+        <button id="chatbot-toggle-btn" class="chatbot-fab">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </button>
+        <div id="chatbot-panel" class="chatbot-panel hidden">
+            <div class="chatbot-header">
+                <h3>InfraGuard AI</h3>
+                <button id="chatbot-close-btn">&times;</button>
+            </div>
+            <div id="chatbot-messages" class="chatbot-messages">
+                <div class="message system">Hello! I am your InfraGuard Assistant. Ask me anything about your infrastructure or discrepancies.</div>
+            </div>
+            <div class="chatbot-input-area">
+                <input type="text" id="chatbot-input" placeholder="Ask about the audit...">
+                <button id="chatbot-send-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js?v=2.0.7"></script>
+</body>
+</html>

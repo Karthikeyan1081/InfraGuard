@@ -1,0 +1,11 @@
+id,hostname,ip_address,cpu,ram_gb,os,status
+SRV-001,db-prod-01,10.0.1.10,8,32,Ubuntu 22.04 LTS,Active
+SRV-002,web-prod-01,10.0.1.11,4,16,Ubuntu 22.04,Active
+SRV-003,app-dev-01,10.0.2.15,2,8,CentOS 7,Active
+SRV-004,cache-prod-01,10.0.1.12,4,8,Ubuntu 20.04,Active
+SRV-005,mail-server,10.0.1.13,4,16,Windows Server 2019 Standard,Inactive
+SRV-006,test-vm-01,10.0.3.5,2,4,Ubuntu 22.04,Active
+SRV-007,db-replica-01,10.0.1.20,8,32,Ubuntu 22.04,Active
+SRV-008,gateway-prod,10.0.1.1,2,4,CentOS Linux 7 (Core),Active
+SRV-009,auth-dev,10.0.2.20,2,4,CentOS Linux 7,Active
+SRV-009,auth-dev,10.0.2.20,2,4,CentOS Linux 7,Active

@@ -1,0 +1,101 @@
+[
+  {
+    "id": "SRV-001",
+    "hostname": "db-prod-01",
+    "ip_address": " 10.0.1.10 ",
+    "cpu": 8,
+    "ram": 32,
+    "os": "Ubuntu 22.04.2 LTS",
+    "status": "Active"
+  },
+  {
+    "id": "SRV-002",
+    "hostname": "web-prod-01.local",
+    "ip_address": "10.0.1.11",
+    "cpu": 4,
+    "ram": 16,
+    "os": "Ubuntu 22.04 LTS",
+    "status": "Active"
+  },
+  {
+    "id": "SRV-003",
+    "hostname": "app-dev-01",
+    "ip_address": "10.0.2.15",
+    "cpu": 4,
+    "ram_size": 16384,
+    "os": "CentOS Linux release 7.9.2009",
+    "status": "Active"
+  },
+  {
+    "id": "SRV-005",
+    "hostname": "mail-server",
+    "ip_address": "10.0.1.13",
+    "cpu": 4,
+    "ram": 16,
+    "os": "Windows Server 2019 Standard",
+    "status": "Active"
+  },
+  {
+    "id": "SRV-006",
+    "hostname": "test-vm-01",
+    "ip_address": "10.0.3.5",
+    "cpu": 2,
+    "ram": 4,
+    "os": "Ubuntu 22.04",
+    "status": "Inactive"
+  },
+  {
+    "id": "SRV-007",
+    "hostname": "db-replica-01",
+    "ip_address": "10.0.1.20",
+    "cpu": 8,
+    "ram": 65536,
+    "os": "Ubuntu 22.04",
+    "status": "Active"
+  },
+  {
+    "id": "SRV-008",
+    "hostname": "gateway-prod",
+    "ip_address": "10.0.1.1",
+    "cpu": 2,
+    "ram": 4,
+    "os": "CentOS Linux release 8.2.2004",
+    "status": "Active"
+  },
+  {
+    "id": "SRV-009",
+    "hostname": "auth-dev",
+    "ip_address": "10.0.2.20",
+    "cpu": 2,
+    "ram": 4,
+    "os": "CentOS Linux release 8.2.2004",
+    "status": "Active"
+  },
+  {
+    "id": "SRV-020",
+    "hostname": "untracked-srv-01",
+    "ip_address": "10.0.3.10",
+    "cpu": 4,
+    "ram": 8,
+    "os": "Ubuntu 22.04 LTS",
+    "status": "Active"
+  },
+  {
+    "id": "SRV-021",
+    "hostname": "untracked-srv-02",
+    "ip_address": "10.0.3.11",
+    "cpu": 2,
+    "ram": 4,
+    "os": "Ubuntu 22.04",
+    "status": "Active"
+  },
+  {
+    "id": "SRV-022",
+    "hostname": "untracked-srv-03",
+    "ip_address": "10.0.3.12",
+    "cpu": 2,
+    "ram": 4,
+    "os": "Ubuntu 22.04",
+    "status": "Active"
+  }
+]
