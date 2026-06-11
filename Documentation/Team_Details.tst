@@ -1,0 +1,21 @@
+# Team - 1 Members Details
+- **Selva vikash P**
+  - Phone: 8940105504
+  - Email: kit27.cse51@gmail.com
+  - Degree: B.E CSE
+  - College: KIT-Kalaignar Karunanidhi institute Of Technology
+- **Sukant B**
+  - Phone:  98946 00278
+  - Email: kit27.am305@gmail.com
+  - Degree: B.E CSE(AIML)
+  - College: KIT-Kalaignar Karunanidhi institute Of Technology
+- **Dharineesh S**
+  - Phone: 63690 76371
+  - Email: kit27.cse501@gmail.com
+  - Degree: B.E CSE
+  - College: KIT-Kalaignar Karunanidhi institute Of Technology
+- **Karthikeyan S**
+  - Phone: 96778 74557
+  - Email: kit27.eceb046@gmail.com
+  - Degree: B.E  ECE
+  - College: KIT-Kalaignar Karunanidhi institute Of Technology
