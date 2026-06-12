@@ -111,7 +111,7 @@ python main.py
 
 ### 6. Access the Dashboard
 Open your web browser and navigate to:
-[http://localhost:8000/](http://localhost:8000/)
+[Visit_Here](https://huggingface.co/spaces/luci-07/InfraGuard)
 
 ---
 
